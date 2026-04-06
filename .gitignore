@@ -1,0 +1,31 @@
+*.xml
+*.log
+*.apk
+*.iml
+**/.vscode/
+**/.idea/
+*.pyc
+.DS_Store
+*.cfg
+*.sqlite3
+checkpoints/
+runs/
+__pycache__/
+*.npy
+*.so
+.rendered
+.venv/
+env/
+venv/
+
+# DirectAU artifacts
+models/DirectAU/code/saved/
+models/DirectAU/code/log/
+models/DirectAU/code/.tmp_override_*.yaml
+models/DirectAU/code/*.pth
+models/DirectAU/code/*.pth.tar
+models/DirectAU/data/*/*.inter
+
+# Ignore full model folders
+models/BERT4Rec/
+models/LightGCN/

@@ -1,0 +1,17 @@
+# DirectAU config for Gowalla
+# Usage:
+# python run_recbole.py --config_files "gowalla_directau.yaml"
+
+model: DirectAU
+dataset: gowalla
+
+# Data location and fixed benchmark split (.train/.valid/.test.inter)
+data_path: ../data/
+benchmark_filename: [train, valid, test]
+
+# Requested training hyperparameters
+learning_rate: 1e-3
+weight_decay: 1e-6
+gamma: 5
+encoder: MF
+train_batch_size: 1024

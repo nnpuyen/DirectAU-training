@@ -1,0 +1,7 @@
+Dataset: gowalla
+Users: 29858
+Items: 40988
+Train interactions: 833031
+Test interactions: 194433
+Total interactions: 1027464
+Sparsity: 0.999160
