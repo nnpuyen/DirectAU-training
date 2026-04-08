@@ -254,7 +254,7 @@ class Trainer(AbstractTrainer):
         if torch.isnan(loss):
             raise ValueError('Training loss is nan')
 
-    def _generate_train_loss_output(self, epoch_idx, s_time, e_time, losses):
+    def _generate_train_loss_output(self, epoch_idx, s_time, e_time, losses, gpu_memory_peak_mb=None):
         des = self.config['loss_decimal_place'] or 4
         train_loss_output = (set_color('epoch %d training', 'green') + ' [' + set_color('time', 'blue') +
                              ': %.2fs, ') % (epoch_idx, e_time - s_time)
@@ -264,6 +264,8 @@ class Trainer(AbstractTrainer):
         else:
             des = '%.' + str(des) + 'f'
             train_loss_output += set_color('train loss', 'blue') + ': ' + des % losses
+        if gpu_memory_peak_mb is not None:
+            train_loss_output += ', ' + set_color('gpu_memory_peak_MB', 'blue') + ': %.2f' % gpu_memory_peak_mb
         return train_loss_output + ']'
 
     def fit(self, train_data, valid_data=None, verbose=True, saved=True, show_progress=False, callback_fn=None):
@@ -287,12 +289,24 @@ class Trainer(AbstractTrainer):
 
         for epoch_idx in range(self.start_epoch, self.epochs):
             # train
+            gpu_memory_peak_mb = None
+            if torch.cuda.is_available() and str(self.device).startswith('cuda'):
+                torch.cuda.reset_peak_memory_stats(self.device)
             training_start_time = time()
             train_loss = self._train_epoch(train_data, epoch_idx, show_progress=show_progress)
             self.train_loss_dict[epoch_idx] = sum(train_loss) if isinstance(train_loss, tuple) else train_loss
             training_end_time = time()
+            if torch.cuda.is_available() and str(self.device).startswith('cuda'):
+                torch.cuda.synchronize(self.device)
+                gpu_memory_peak_mb = torch.cuda.max_memory_allocated(self.device) / (1024 ** 2)
             train_loss_output = \
-                self._generate_train_loss_output(epoch_idx, training_start_time, training_end_time, train_loss)
+                self._generate_train_loss_output(
+                    epoch_idx,
+                    training_start_time,
+                    training_end_time,
+                    train_loss,
+                    gpu_memory_peak_mb,
+                )
             if verbose:
                 self.logger.info(train_loss_output)
 

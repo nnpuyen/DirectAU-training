@@ -1,0 +1,38 @@
+{
+  "config": {
+    "\u001b[0m\u001b[1;36mvalid_metric_bigger\u001b[0m": "\u001b[1;33mTrue\u001b[0m",
+    "\u001b[1;36membedding_size\u001b[0m": "\u001b[1;33m64\u001b[0m",
+    "\u001b[1;36mencoder\u001b[0m": "\u001b[1;33mMF\u001b[0m",
+    "\u001b[1;36mgamma\u001b[0m": "\u001b[1;33m5\u001b[0m",
+    "\u001b[1;36mSOURCE_ID_FIELD\u001b[0m": "\u001b[1;33msource_id\u001b[0m",
+    "\u001b[1;36mTARGET_ID_FIELD\u001b[0m": "\u001b[1;33mtarget_id\u001b[0m",
+    "\u001b[1;36mMODEL_TYPE\u001b[0m": "\u001b[1;33mModelType.GENERAL\u001b[0m",
+    "\u001b[1;36mMODEL_INPUT_TYPE\u001b[0m": "\u001b[1;33mInputType.POINTWISE\u001b[0m",
+    "\u001b[1;36meval_type\u001b[0m": "\u001b[1;33mEvaluatorType.RANKING\u001b[0m",
+    "\u001b[1;36mdevice\u001b[0m": "\u001b[1;33mcpu\u001b[0m",
+    "\u001b[1;36mtrain_neg_sample_args\u001b[0m": "\u001b[1;33m{'strategy': 'none'}\u001b[0m"
+  },
+  "dataset": "gowalla",
+  "model": "DirectAU",
+  "seed": 2022,
+  "topks": [
+    5,
+    10,
+    20
+  ],
+  "dataset_stats": {},
+  "epoch_logs": [],
+  "test_results": [],
+  "best_results": {
+    "epoch": -1,
+    "metrics": {},
+    "best_epoch": -1
+  },
+  "total_train_time_seconds": 409.32,
+  "system_info": {
+    "device": "cpu",
+    "gpu_name": null,
+    "gpu_memory_total_MB": null
+  },
+  "run_id": 0
+}

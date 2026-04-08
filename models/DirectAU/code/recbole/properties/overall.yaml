@@ -15,7 +15,7 @@ learner: adam
 learning_rate: 0.001
 training_neg_sample_num: 1
 training_neg_sample_distribution: uniform
-eval_step: 1
+eval_step: 10
 stopping_step: 10
 clip_grad_norm: ~
 weight_decay: 1e-6

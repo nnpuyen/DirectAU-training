@@ -1,7 +1,51 @@
 import ast
 import json
 import re
+import sys
 from pathlib import Path
+
+ANSI_ESCAPE_PATTERN = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]')
+
+
+def safe_console_text(text):
+    encoding = getattr(sys.stdout, "encoding", None) or "utf-8"
+    return str(text).encode(encoding, errors="replace").decode(encoding, errors="replace")
+
+
+def safe_print(text):
+    print(safe_console_text(text))
+
+
+def clean_log_file(log_file_path):
+    try:
+        content = log_file_path.read_text(encoding='utf-8', errors='ignore')
+        cleaned_content = ANSI_ESCAPE_PATTERN.sub('', content)
+
+        if cleaned_content != content:
+            log_file_path.write_text(cleaned_content, encoding='utf-8')
+            return 'cleaned'
+        return 'already_clean'
+    except Exception as err:
+        return f'error: {err}'
+
+
+def clean_log_files(log_dir):
+    log_files = sorted(log_dir.rglob('*.log'))
+    if not log_files:
+        safe_print(f"Khong tim thay file .log trong thu muc: {log_dir}")
+        return []
+
+    safe_print(f"Tim thay {len(log_files)} file .log de clean...")
+    for log_file in log_files:
+        status = clean_log_file(log_file)
+        relative_path = log_file.relative_to(log_dir)
+        if status == 'cleaned':
+            safe_print(f"Da clean: {relative_path}")
+        elif status == 'already_clean':
+            safe_print(f"Da sach san: {relative_path}")
+        else:
+            safe_print(f"Loi khi xu ly {relative_path}: {status}")
+    return log_files
 
 def parse_recbole_log_to_json(log_content):
     def to_value(raw):
@@ -55,7 +99,7 @@ def parse_recbole_log_to_json(log_content):
     def parse_epoch_logs(content):
         logs = []
         train_re = re.compile(
-            r"epoch\s+(\d+)\s+training\s+\[time:\s*([0-9.]+)s,\s*train loss:\s*([-0-9.]+)\]",
+            r"epoch\s+(\d+)\s+training\s+\[time:\s*([0-9.]+)s,\s*train loss:\s*([-0-9.]+)(?:,\s*gpu_memory_peak_MB:\s*([0-9.]+))?\]",
             re.IGNORECASE
         )
         for m in train_re.finditer(content):
@@ -63,7 +107,7 @@ def parse_recbole_log_to_json(log_content):
                 "epoch": int(m.group(1)),
                 "loss": float(m.group(3)),
                 "epoch_time_seconds": float(m.group(2)),
-                "gpu_memory_peak_MB": None
+                "gpu_memory_peak_MB": float(m.group(4)) if m.group(4) is not None else None
             })
         return logs
 
@@ -200,28 +244,40 @@ def parse_recbole_log_to_json(log_content):
 
     return data
 
+
+def convert_log_file_to_json(log_file_path):
+    json_output_path = log_file_path.with_suffix('.json')
+    content = log_file_path.read_text(encoding='utf-8')
+    data_dict = parse_recbole_log_to_json(content)
+    with open(json_output_path, 'w', encoding='utf-8') as f:
+        json.dump(data_dict, f, indent=2, ensure_ascii=False)
+    safe_print(f"Chuyen doi thanh cong: {log_file_path.name} -> {json_output_path.name}")
+
 # --- Cách sử dụng ---
 if __name__ == '__main__':
-    # Thay thế bằng đường dẫn đến file log của bạn
-    log_file_path = Path(r'log\Gowalla\DirectAU-Mar-30-2026_14-57-42 (1).log')
-    
-    # Đặt tên cho file JSON đầu ra
-    json_output_path = log_file_path.with_suffix('.json')
+    log_dir = Path(r'models\DirectAU\code\log')
 
     try:
-        # Đọc nội dung file log
-        content = log_file_path.read_text(encoding='utf-8')
-        
-        # Phân tích nội dung
-        data_dict = parse_recbole_log_to_json(content)
-        
-        # Ghi kết quả ra file JSON
-        with open(json_output_path, 'w', encoding='utf-8') as f:
-            json.dump(data_dict, f, indent=2, ensure_ascii=False)
-            
-        print(f"Chuyển đổi thành công! File JSON đã được lưu tại:\n{json_output_path}")
+        if not log_dir.exists():
+            raise FileNotFoundError(f"Khong tim thay thu muc log: '{log_dir}'")
+
+        log_files = clean_log_files(log_dir)
+        if not log_files:
+            safe_print("Khong co file .log de chuyen doi.")
+            sys.exit(0)
+
+        safe_print("\nBat dau chuyen doi log sang JSON...")
+        converted_count = 0
+        for log_file in log_files:
+            try:
+                convert_log_file_to_json(log_file)
+                converted_count += 1
+            except Exception as e:
+                safe_print(f"Loi khi chuyen doi {log_file.name}: {e}")
+
+        safe_print(f"\nHoan tat: da chuyen doi {converted_count}/{len(log_files)} file .log.")
 
     except FileNotFoundError:
-        print(f"Lỗi: Không tìm thấy file log tại '{log_file_path}'")
+        safe_print(f"Loi: Khong tim thay file/thu muc log tai '{log_dir}'")
     except Exception as e:
-        print(f"Đã xảy ra lỗi trong quá trình xử lý: {e}")
+        safe_print(f"Da xay ra loi trong qua trinh xu ly: {e}")

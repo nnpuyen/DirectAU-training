@@ -29,6 +29,7 @@ import json
 import time
 import argparse
 import glob
+import re
 from pathlib import Path
 from statistics import mean, stdev
 
@@ -36,7 +37,9 @@ from statistics import mean, stdev
 # ============================================================
 # 5 different seeds for reproducibility
 # ============================================================
-SEEDS = [2020, 2021, 2022, 2023, 2024]
+SEEDS = [2023, 2024]
+
+ANSI_ESCAPE_PATTERN = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]')
 
 
 # ============================================================
@@ -45,6 +48,7 @@ SEEDS = [2020, 2021, 2022, 2023, 2024]
 DATASET_CONFIGS = {
     'movielens': {
         'epochs': 300,
+        'eval_step': 10,
         'train_batch_size': 256,
         'eval_batch_size': 4096,
         'learning_rate': 0.001,
@@ -54,6 +58,7 @@ DATASET_CONFIGS = {
     },
     'gowalla': {
         'epochs': 300,
+        'eval_step': 10,
         'train_batch_size': 1024,
         'eval_batch_size': 4096,
         'learning_rate': 0.001,
@@ -63,6 +68,7 @@ DATASET_CONFIGS = {
     },
     'yelp2018': {
         'epochs': 300,
+        'eval_step': 10,
         'train_batch_size': 256,
         'eval_batch_size': 4096,
         'learning_rate': 0.001,
@@ -72,6 +78,7 @@ DATASET_CONFIGS = {
     },
     'amazon-book': {
         'epochs': 300,
+        'eval_step': 10,
         'train_batch_size': 512,
         'eval_batch_size': 4096,
         'learning_rate': 0.001,
@@ -81,6 +88,7 @@ DATASET_CONFIGS = {
     },
     'collected': {
         'epochs': 300,
+        'eval_step': 10,
         'train_batch_size': 256,
         'eval_batch_size': 4096,
         'learning_rate': 0.001,
@@ -91,12 +99,12 @@ DATASET_CONFIGS = {
 }
 
 
-def _load_convert_parser(script_dir):
-    """Import convert_log parser from models/DirectAU/convert_log.py."""
+def _load_convert_tools(script_dir):
+    """Import convert_log helpers used by the experiment pipeline."""
     if script_dir not in sys.path:
         sys.path.insert(0, script_dir)
-    from convert_log import parse_recbole_log_to_json
-    return parse_recbole_log_to_json
+    from convert_log import parse_recbole_log_to_json, clean_log_file
+    return parse_recbole_log_to_json, clean_log_file
 
 
 def _metric_name_to_group(metric_name):
@@ -244,8 +252,8 @@ def check_data_exists(dataset_name):
 
 
 def _list_log_files(code_dir):
-    """Return current RecBole log files under code/log."""
-    return set(glob.glob(os.path.join(code_dir, 'log', '*.log')))
+    """Return current RecBole log files under code/log (recursive)."""
+    return set(glob.glob(os.path.join(code_dir, 'log', '**', '*.log'), recursive=True))
 
 
 def _pick_new_log_file(code_dir, logs_before, run_start_ts):
@@ -272,7 +280,7 @@ def _pick_new_log_file(code_dir, logs_before, run_start_ts):
 def _write_override_config(code_dir, data_dir, dataset, seed, config, include_hparams=True):
     """Write a temporary YAML override config for one run.
 
-    If include_hparams is False, only runtime fields are overridden.
+    Epochs is always overridden; other hyperparameters are optional.
     """
     override_path = os.path.join(code_dir, f'.tmp_override_{dataset}_{seed}.yaml')
     lines = [
@@ -280,10 +288,11 @@ def _write_override_config(code_dir, data_dir, dataset, seed, config, include_hp
         'reproducibility: True',
         f"data_path: '{Path(data_dir).as_posix()}/'",
         "benchmark_filename: ['train', 'valid', 'test']",
+        f'epochs: {config["epochs"]}',
+        f'eval_step: {config["eval_step"]}',
     ]
     if include_hparams:
         lines.extend([
-            f'epochs: {config["epochs"]}',
             f'train_batch_size: {config["train_batch_size"]}',
             f'eval_batch_size: {config["eval_batch_size"]}',
             f'learning_rate: {config["learning_rate"]}',
@@ -315,7 +324,7 @@ def run_single_experiment(dataset, seed, run_id, output_dir, num_runs, config_fi
     code_dir = os.path.join(script_dir, 'code')
     data_dir = os.path.join(script_dir, 'data')
     run_script = os.path.join(code_dir, 'run_recbole.py')
-    parse_recbole_log_to_json = _load_convert_parser(script_dir)
+    parse_recbole_log_to_json, clean_log_file = _load_convert_tools(script_dir)
 
     dataset_custom_cfg = _find_dataset_custom_config(code_dir, dataset)
     include_hparams = dataset_custom_cfg is None
@@ -335,12 +344,13 @@ def run_single_experiment(dataset, seed, run_id, output_dir, num_runs, config_fi
         '--model=DirectAU',
         f'--dataset={dataset}',
         f"--config_files={' '.join(run_config_files)}",
+        f"--eval_step={config['eval_step']}",
     ]
 
     print(f"\n{'='*70}")
     print(f"  Dataset: {dataset} | Seed: {seed} | Run: {run_id+1}/{num_runs}")
     print(
-        f"  Config: epochs={config['epochs']}, batch={config['train_batch_size']}, "
+        f"  Config: epochs={config['epochs']}, eval_step={config['eval_step']}, batch={config['train_batch_size']}, "
         f"eval_batch={config['eval_batch_size']}, lr={config['learning_rate']}, "
         f"weight_decay={config['weight_decay']}"
     )
@@ -369,8 +379,13 @@ def run_single_experiment(dataset, seed, run_id, output_dir, num_runs, config_fi
     parsed = None
     if log_file:
         try:
-            with open(log_file, 'r', encoding='utf-8') as f:
-                parsed = parse_recbole_log_to_json(f.read())
+            clean_status = clean_log_file(Path(log_file))
+            if isinstance(clean_status, str) and clean_status.startswith('error:'):
+                print(f"WARNING: Failed to clean log {log_file}: {clean_status}")
+            with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
+                log_content = f.read()
+                log_content = ANSI_ESCAPE_PATTERN.sub('', log_content)
+                parsed = parse_recbole_log_to_json(log_content)
         except Exception as exc:
             print(f"WARNING: Failed to parse log {log_file}: {exc}")
 
@@ -500,6 +515,8 @@ def main():
                         help='Datasets to run experiments on')
     parser.add_argument('--num_runs', type=int, default=5,
                         help='Number of runs per dataset (1-5)')
+    parser.add_argument('--epochs', type=int, default=None,
+                        help='Override epochs for all selected datasets (e.g., --epochs 3 for smoke test)')
     parser.add_argument('--run_ids', nargs='+', type=int, default=None,
                         help='Specific run IDs to execute (0-indexed), e.g. --run_ids 2 3 4')
     parser.add_argument('--output_dir', type=str, default=None,
@@ -512,6 +529,12 @@ def main():
                         default='recbole/properties/overall.yaml recbole/properties/model/DirectAU.yaml',
                         help='Space-separated RecBole config files relative to models/DirectAU/code')
     args = parser.parse_args()
+
+    if args.epochs is not None:
+        if args.epochs <= 0:
+            raise ValueError('--epochs must be a positive integer')
+        for dataset_name in DATASET_CONFIGS:
+            DATASET_CONFIGS[dataset_name]['epochs'] = args.epochs
 
     # Resolve output directory
     if args.output_dir is None:
