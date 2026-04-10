@@ -1,0 +1,7 @@
+Dataset: yelp2018
+Users: 93537
+Items: 53347
+Train interactions: 2059466
+Test interactions: 474293
+Total interactions: 2533759
+Sparsity: 0.999492

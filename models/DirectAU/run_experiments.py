@@ -37,7 +37,7 @@ from statistics import mean, stdev
 # ============================================================
 # 5 different seeds for reproducibility
 # ============================================================
-SEEDS = [2023, 2024]
+SEEDS = [2020, 2021, 2022]
 
 ANSI_ESCAPE_PATTERN = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]')
 
@@ -68,8 +68,8 @@ DATASET_CONFIGS = {
     },
     'yelp2018': {
         'epochs': 300,
-        'eval_step': 10,
-        'train_batch_size': 256,
+        'eval_step': 1,
+        'train_batch_size': 1024,
         'eval_batch_size': 4096,
         'learning_rate': 0.001,
         'weight_decay': 1e-6,
@@ -97,6 +97,33 @@ DATASET_CONFIGS = {
         'topk': [5, 10, 20],
     },
 }
+
+DATASET_ALIASES = {
+    'yelp18': 'yelp2018',
+}
+
+# Keep yelp18 usable when the local data folder is named yelp18.
+DATASET_CONFIGS['yelp18'] = dict(DATASET_CONFIGS['yelp2018'])
+
+
+def _resolve_dataset_name(dataset, script_dir):
+    """Resolve dataset alias based on available data folders.
+
+    Supports both yelp2018 and yelp18 layouts.
+    """
+    mapped = DATASET_ALIASES.get(dataset, dataset)
+    if dataset not in ('yelp18', 'yelp2018'):
+        return mapped
+
+    data_root = os.path.join(script_dir, 'data')
+    yelp2018_dir = os.path.join(data_root, 'yelp2018')
+    yelp18_dir = os.path.join(data_root, 'yelp18')
+
+    if os.path.isdir(yelp2018_dir):
+        return 'yelp2018'
+    if os.path.isdir(yelp18_dir):
+        return 'yelp18'
+    return mapped
 
 
 def _load_convert_tools(script_dir):
@@ -310,10 +337,14 @@ def _write_override_config(code_dir, data_dir, dataset, seed, config, include_hp
 
 def _find_dataset_custom_config(code_dir, dataset):
     """Return dataset-specific config file name if present, else None."""
-    filename = f'{dataset}_directau.yaml'
-    path = os.path.join(code_dir, filename)
-    if os.path.exists(path):
-        return filename
+    candidates = [f'{dataset}_directau.yaml']
+    if dataset == 'yelp2018':
+        candidates.append('yelp18_directau.yaml')
+
+    for filename in candidates:
+        path = os.path.join(code_dir, filename)
+        if os.path.exists(path):
+            return filename
     return None
 
 
@@ -536,9 +567,10 @@ def main():
         for dataset_name in DATASET_CONFIGS:
             DATASET_CONFIGS[dataset_name]['epochs'] = args.epochs
 
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
     # Resolve output directory
     if args.output_dir is None:
-        script_dir = os.path.dirname(os.path.abspath(__file__))
         output_dir = os.path.abspath(os.path.join(script_dir, '..', '..', 'results', 'DirectAU'))
     else:
         output_dir = os.path.abspath(args.output_dir)
@@ -561,16 +593,20 @@ def main():
     failed_experiments = []
     skipped_experiments = 0
 
+    normalized_datasets = [_resolve_dataset_name(ds, script_dir) for ds in args.datasets]
+
     print(f"\n{'#'*70}")
     print('  DirectAU Experiment Runner')
     print(f"  Datasets: {args.datasets}")
+    if normalized_datasets != args.datasets:
+        print(f"  Normalized datasets: {normalized_datasets}")
     print(f"  Run IDs: {run_id_list} (seeds: {[SEEDS[i] for i in run_id_list]})")
     print(f"  Output: {output_dir}")
     print(f"{'#'*70}\n")
 
     overall_start = time.time()
 
-    for dataset in args.datasets:
+    for dataset in normalized_datasets:
         if dataset not in DATASET_CONFIGS:
             print(f"WARNING: Unknown dataset '{dataset}', skipping.")
             continue
