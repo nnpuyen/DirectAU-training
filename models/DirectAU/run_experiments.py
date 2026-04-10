@@ -48,7 +48,7 @@ ANSI_ESCAPE_PATTERN = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]')
 DATASET_CONFIGS = {
     'movielens': {
         'epochs': 300,
-        'eval_step': 10,
+        'eval_step': 1,
         'train_batch_size': 256,
         'eval_batch_size': 4096,
         'learning_rate': 0.001,

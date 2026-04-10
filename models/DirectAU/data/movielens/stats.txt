@@ -1,0 +1,7 @@
+Dataset: movielens
+Users: 6040
+Items: 3260
+Train interactions: 801218
+Test interactions: 197321
+Total interactions: 998539
+Sparsity: 0.949288
