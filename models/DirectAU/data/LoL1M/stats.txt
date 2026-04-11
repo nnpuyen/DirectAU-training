@@ -1,0 +1,7 @@
+Dataset: LoL1M
+Users: 55153
+Items: 3862
+Train interactions: 977924
+Test interactions: 217276
+Total interactions: 1195200
+Sparsity: 0.994389

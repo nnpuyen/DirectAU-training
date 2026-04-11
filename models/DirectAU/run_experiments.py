@@ -2,7 +2,7 @@
 """
 Experiment Runner for DirectAU
 ==============================
-Runs DirectAU on all 5 datasets with multiple seeds (3-5 runs each).
+Runs DirectAU on configured datasets with multiple seeds (up to 3 runs each).
 Saves per-run JSON results and generates an aggregated summary.
 
 Usage:
@@ -35,7 +35,7 @@ from statistics import mean, stdev
 
 
 # ============================================================
-# 5 different seeds for reproducibility
+# Fixed seeds for reproducibility
 # ============================================================
 SEEDS = [2020, 2021, 2022]
 
@@ -78,7 +78,7 @@ DATASET_CONFIGS = {
     },
     'amazon-book': {
         'epochs': 300,
-        'eval_step': 10,
+        'eval_step': 1,
         'train_batch_size': 512,
         'eval_batch_size': 4096,
         'learning_rate': 0.001,
@@ -86,9 +86,19 @@ DATASET_CONFIGS = {
         'stopping_step': 10,
         'topk': [5, 10, 20],
     },
-    'collected': {
+    'amazon-cds': {
         'epochs': 300,
-        'eval_step': 10,
+        'eval_step': 1,
+        'train_batch_size': 512,
+        'eval_batch_size': 4096,
+        'learning_rate': 0.001,
+        'weight_decay': 1e-6,
+        'stopping_step': 10,
+        'topk': [5, 10, 20],
+    },
+    'LoL1M': {
+        'epochs': 300,
+        'eval_step': 1,
         'train_batch_size': 256,
         'eval_batch_size': 4096,
         'learning_rate': 0.001,
@@ -100,6 +110,7 @@ DATASET_CONFIGS = {
 
 DATASET_ALIASES = {
     'yelp18': 'yelp2018',
+    'lol1m': 'LoL1M',
 }
 
 # Keep yelp18 usable when the local data folder is named yelp18.
@@ -340,6 +351,8 @@ def _find_dataset_custom_config(code_dir, dataset):
     candidates = [f'{dataset}_directau.yaml']
     if dataset == 'yelp2018':
         candidates.append('yelp18_directau.yaml')
+    if dataset == 'LoL1M':
+        candidates.append('lol1m_directau.yaml')
 
     for filename in candidates:
         path = os.path.join(code_dir, filename)
@@ -542,7 +555,7 @@ def main():
     parser = argparse.ArgumentParser(
         description='Run DirectAU experiments on all datasets')
     parser.add_argument('--datasets', nargs='+',
-                        default=['movielens', 'gowalla', 'yelp2018', 'amazon-book', 'collected'],
+                        default=['movielens', 'gowalla', 'yelp2018', 'amazon-book', 'amazon-cds', 'LoL1M', 'collected'],
                         help='Datasets to run experiments on')
     parser.add_argument('--num_runs', type=int, default=5,
                         help='Number of runs per dataset (1-5)')

@@ -1,0 +1,632 @@
+{
+  "gowalla": {
+    "num_runs": 5,
+    "dataset_stats": {
+      "n_users": 29859,
+      "n_items": 40989,
+      "train_interactions": 1027464
+    },
+    "system_info": {
+      "device": "cuda",
+      "gpu_name": "Tesla T4",
+      "gpu_memory_total_MB": 14912.69
+    },
+    "config": {
+      "gpu_id": 0,
+      "use_gpu": true,
+      "seed": 2020,
+      "state": "INFO",
+      "reproducibility": true,
+      "data_path": "/kaggle/working/DirectAU-training/models/DirectAU/data/gowalla",
+      "show_progress": true,
+      "checkpoint_dir": "saved",
+      "epochs": 300,
+      "train_batch_size": 1024,
+      "learner": "adam",
+      "learning_rate": 0.001,
+      "training_neg_sample_num": 0,
+      "training_neg_sample_distribution": "uniform",
+      "eval_step": 10,
+      "stopping_step": 10,
+      "clip_grad_norm": null,
+      "weight_decay": "1e-06",
+      "draw_loss_pic": false,
+      "loss_decimal_place": 4,
+      "eval_setting": "RO_RS,full",
+      "group_by_user": true,
+      "split_ratio": [
+        0.8,
+        0.1,
+        0.1
+      ],
+      "leave_one_num": 2,
+      "real_time_process": false,
+      "metrics": [
+        "Precision",
+        "Recall",
+        "NDCG",
+        "Hit",
+        "MRR",
+        "MAP"
+      ],
+      "topk": [
+        5,
+        10,
+        20
+      ],
+      "valid_metric": "NDCG@20",
+      "eval_batch_size": 4096,
+      "metric_decimal_place": 4,
+      "USER_ID_FIELD": "user_id",
+      "ITEM_ID_FIELD": "item_id",
+      "RATING_FIELD": "rating",
+      "TIME_FIELD": "timestamp",
+      "seq_len": null,
+      "LABEL_FIELD": "label",
+      "threshold": null,
+      "NEG_PREFIX": "neg_",
+      "load_col": {
+        "inter": [
+          "user_id",
+          "item_id",
+          "timestamp"
+        ]
+      },
+      "unload_col": null,
+      "unused_col": null,
+      "additional_feat_suffix": null,
+      "rm_dup_inter": null,
+      "lowest_val": null,
+      "highest_val": null,
+      "equal_val": null,
+      "not_equal_val": null,
+      "filter_inter_by_user_or_item": true,
+      "max_user_inter_num": null,
+      "min_user_inter_num": 5,
+      "max_item_inter_num": null,
+      "min_item_inter_num": 5,
+      "fields_in_same_space": null,
+      "preload_weight": null,
+      "normalize_field": null,
+      "normalize_all": null,
+      "ITEM_LIST_LENGTH_FIELD": "item_length",
+      "LIST_SUFFIX": "_list",
+      "MAX_ITEM_LIST_LENGTH": 50,
+      "POSITION_FIELD": "position_id",
+      "HEAD_ENTITY_ID_FIELD": "head_id",
+      "TAIL_ENTITY_ID_FIELD": "tail_id",
+      "RELATION_ID_FIELD": "relation_id",
+      "ENTITY_ID_FIELD": "entity_id",
+      "benchmark_filename": [
+        "train",
+        "valid",
+        "test"
+      ],
+      "valid_metric_bigger": true,
+      "embedding_size": 64,
+      "encoder": "MF",
+      "gamma": 5,
+      "SOURCE_ID_FIELD": "source_id",
+      "TARGET_ID_FIELD": "target_id",
+      "MODEL_TYPE": "ModelType.GENERAL",
+      "MODEL_INPUT_TYPE": "InputType.POINTWISE",
+      "eval_type": "EvaluatorType.RANKING",
+      "device": "cuda",
+      "train_neg_sample_args": {
+        "strategy": "none"
+      }
+    },
+    "training_time_mean_seconds": 10863.82,
+    "training_time_std_seconds": 72.89,
+    "best_epoch_mean": 299,
+    "metrics": {
+      "precision": {
+        "5": {
+          "mean": 0.08888,
+          "std": 0.000303,
+          "values": [
+            0.0886,
+            0.0887,
+            0.0887,
+            0.0891,
+            0.0893
+          ]
+        },
+        "10": {
+          "mean": 0.06826,
+          "std": 0.000114,
+          "values": [
+            0.0681,
+            0.0683,
+            0.0682,
+            0.0684,
+            0.0683
+          ]
+        },
+        "20": {
+          "mean": 0.05074,
+          "std": 0.000134,
+          "values": [
+            0.0506,
+            0.0506,
+            0.0508,
+            0.0509,
+            0.0508
+          ]
+        }
+      },
+      "recall": {
+        "5": {
+          "mean": 0.08842,
+          "std": 0.000497,
+          "values": [
+            0.0881,
+            0.0885,
+            0.0878,
+            0.0891,
+            0.0886
+          ]
+        },
+        "10": {
+          "mean": 0.1323,
+          "std": 0.000529,
+          "values": [
+            0.1322,
+            0.1322,
+            0.1318,
+            0.1332,
+            0.1321
+          ]
+        },
+        "20": {
+          "mean": 0.19192,
+          "std": 0.000526,
+          "values": [
+            0.1914,
+            0.1914,
+            0.1924,
+            0.1925,
+            0.1919
+          ]
+        }
+      },
+      "ndcg": {
+        "5": {
+          "mean": 0.1179,
+          "std": 0.00051,
+          "values": [
+            0.1176,
+            0.1177,
+            0.1176,
+            0.1188,
+            0.1178
+          ]
+        },
+        "10": {
+          "mean": 0.12664,
+          "std": 0.00055,
+          "values": [
+            0.1263,
+            0.1266,
+            0.1264,
+            0.1276,
+            0.1263
+          ]
+        },
+        "20": {
+          "mean": 0.14468,
+          "std": 0.000536,
+          "values": [
+            0.1443,
+            0.1444,
+            0.1447,
+            0.1456,
+            0.1444
+          ]
+        }
+      },
+      "mrr": {
+        "5": {
+          "mean": 0.2108,
+          "std": 0.001323,
+          "values": [
+            0.2107,
+            0.2103,
+            0.21,
+            0.2131,
+            0.2099
+          ]
+        },
+        "10": {
+          "mean": 0.22558,
+          "std": 0.001289,
+          "values": [
+            0.2255,
+            0.2252,
+            0.2248,
+            0.2278,
+            0.2246
+          ]
+        },
+        "20": {
+          "mean": 0.2337,
+          "std": 0.001271,
+          "values": [
+            0.2336,
+            0.2332,
+            0.2331,
+            0.2359,
+            0.2327
+          ]
+        }
+      },
+      "hit_rate": {
+        "5": {
+          "mean": 0.33462,
+          "std": 0.001322,
+          "values": [
+            0.3339,
+            0.3341,
+            0.3331,
+            0.3358,
+            0.3362
+          ]
+        },
+        "10": {
+          "mean": 0.44578,
+          "std": 0.000773,
+          "values": [
+            0.4456,
+            0.4463,
+            0.4445,
+            0.4462,
+            0.4463
+          ]
+        },
+        "20": {
+          "mean": 0.56222,
+          "std": 0.001322,
+          "values": [
+            0.5612,
+            0.5605,
+            0.5629,
+            0.5628,
+            0.5637
+          ]
+        }
+      },
+      "map": {
+        "5": {
+          "mean": 0.07514,
+          "std": 0.000439,
+          "values": [
+            0.0749,
+            0.075,
+            0.0751,
+            0.0759,
+            0.0748
+          ]
+        },
+        "10": {
+          "mean": 0.07074,
+          "std": 0.000451,
+          "values": [
+            0.0704,
+            0.0707,
+            0.0707,
+            0.0715,
+            0.0704
+          ]
+        },
+        "20": {
+          "mean": 0.07306,
+          "std": 0.000451,
+          "values": [
+            0.0727,
+            0.073,
+            0.0731,
+            0.0738,
+            0.0727
+          ]
+        }
+      }
+    }
+  },
+  "yelp18": {
+    "num_runs": 3,
+    "dataset_stats": {
+      "n_users": 93538,
+      "n_items": 53348,
+      "train_interactions": 2533759
+    },
+    "system_info": {
+      "device": "cuda",
+      "gpu_name": "Tesla T4",
+      "gpu_memory_total_MB": 14912.69
+    },
+    "config": {
+      "gpu_id": 0,
+      "use_gpu": true,
+      "seed": 2020,
+      "state": "INFO",
+      "reproducibility": true,
+      "data_path": "/kaggle/working/DirectAU-training/models/DirectAU/data/yelp18",
+      "show_progress": true,
+      "checkpoint_dir": "saved",
+      "epochs": 300,
+      "train_batch_size": 1024,
+      "learner": "adam",
+      "learning_rate": 0.001,
+      "training_neg_sample_num": 0,
+      "training_neg_sample_distribution": "uniform",
+      "eval_step": 1,
+      "stopping_step": 10,
+      "clip_grad_norm": null,
+      "weight_decay": "1e-06",
+      "draw_loss_pic": false,
+      "loss_decimal_place": 4,
+      "eval_setting": "RO_RS,full",
+      "group_by_user": true,
+      "split_ratio": [
+        0.8,
+        0.1,
+        0.1
+      ],
+      "leave_one_num": 2,
+      "real_time_process": false,
+      "metrics": [
+        "Precision",
+        "Recall",
+        "NDCG",
+        "Hit",
+        "MRR",
+        "MAP"
+      ],
+      "topk": [
+        5,
+        10,
+        20
+      ],
+      "valid_metric": "NDCG@20",
+      "eval_batch_size": 4096,
+      "metric_decimal_place": 4,
+      "USER_ID_FIELD": "user_id",
+      "ITEM_ID_FIELD": "item_id",
+      "RATING_FIELD": "rating",
+      "TIME_FIELD": "timestamp",
+      "seq_len": null,
+      "LABEL_FIELD": "label",
+      "threshold": null,
+      "NEG_PREFIX": "neg_",
+      "load_col": {
+        "inter": [
+          "user_id",
+          "item_id",
+          "timestamp"
+        ]
+      },
+      "unload_col": null,
+      "unused_col": null,
+      "additional_feat_suffix": null,
+      "lowest_val": null,
+      "highest_val": null,
+      "equal_val": null,
+      "not_equal_val": null,
+      "max_user_inter_num": null,
+      "min_user_inter_num": 5,
+      "max_item_inter_num": null,
+      "min_item_inter_num": 5,
+      "fields_in_same_space": null,
+      "preload_weight": null,
+      "normalize_field": null,
+      "normalize_all": null,
+      "ITEM_LIST_LENGTH_FIELD": "item_length",
+      "LIST_SUFFIX": "_list",
+      "MAX_ITEM_LIST_LENGTH": 50,
+      "POSITION_FIELD": "position_id",
+      "HEAD_ENTITY_ID_FIELD": "head_id",
+      "TAIL_ENTITY_ID_FIELD": "tail_id",
+      "RELATION_ID_FIELD": "relation_id",
+      "ENTITY_ID_FIELD": "entity_id",
+      "valid_metric_bigger": true,
+      "embedding_size": 64,
+      "encoder": "MF",
+      "gamma": 1,
+      "rm_dup_inter": null,
+      "filter_inter_by_user_or_item": true,
+      "SOURCE_ID_FIELD": "source_id",
+      "TARGET_ID_FIELD": "target_id",
+      "benchmark_filename": [
+        "train",
+        "valid",
+        "test"
+      ],
+      "MODEL_TYPE": "ModelType.GENERAL",
+      "MODEL_INPUT_TYPE": "InputType.POINTWISE",
+      "eval_type": "EvaluatorType.RANKING",
+      "device": "cuda",
+      "train_neg_sample_args": {
+        "strategy": "none"
+      }
+    },
+    "training_time_mean_seconds": 6216.07,
+    "training_time_std_seconds": 1363.63,
+    "best_epoch_mean": 57,
+    "metrics": {
+      "precision": {
+        "5": {
+          "mean": 0.016133,
+          "std": 0.000153,
+          "values": [
+            0.016,
+            0.0161,
+            0.0163
+          ]
+        },
+        "10": {
+          "mean": 0.013467,
+          "std": 5.8e-05,
+          "values": [
+            0.0134,
+            0.0135,
+            0.0135
+          ]
+        },
+        "20": {
+          "mean": 0.010933,
+          "std": 5.8e-05,
+          "values": [
+            0.0109,
+            0.011,
+            0.0109
+          ]
+        }
+      },
+      "recall": {
+        "5": {
+          "mean": 0.046467,
+          "std": 0.000611,
+          "values": [
+            0.0458,
+            0.0466,
+            0.047
+          ]
+        },
+        "10": {
+          "mean": 0.076533,
+          "std": 0.000611,
+          "values": [
+            0.076,
+            0.0764,
+            0.0772
+          ]
+        },
+        "20": {
+          "mean": 0.122033,
+          "std": 0.000351,
+          "values": [
+            0.1217,
+            0.1224,
+            0.122
+          ]
+        }
+      },
+      "ndcg": {
+        "5": {
+          "mean": 0.034567,
+          "std": 0.000416,
+          "values": [
+            0.0341,
+            0.0347,
+            0.0349
+          ]
+        },
+        "10": {
+          "mean": 0.0445,
+          "std": 0.000458,
+          "values": [
+            0.044,
+            0.0446,
+            0.0449
+          ]
+        },
+        "20": {
+          "mean": 0.0571,
+          "std": 0.000346,
+          "values": [
+            0.0567,
+            0.0573,
+            0.0573
+          ]
+        }
+      },
+      "mrr": {
+        "5": {
+          "mean": 0.0402,
+          "std": 0.000436,
+          "values": [
+            0.0397,
+            0.0404,
+            0.0405
+          ]
+        },
+        "10": {
+          "mean": 0.0462,
+          "std": 0.000436,
+          "values": [
+            0.0457,
+            0.0464,
+            0.0465
+          ]
+        },
+        "20": {
+          "mean": 0.050667,
+          "std": 0.000404,
+          "values": [
+            0.0502,
+            0.0509,
+            0.0509
+          ]
+        }
+      },
+      "hit_rate": {
+        "5": {
+          "mean": 0.076667,
+          "std": 0.000651,
+          "values": [
+            0.076,
+            0.0767,
+            0.0773
+          ]
+        },
+        "10": {
+          "mean": 0.1227,
+          "std": 0.000917,
+          "values": [
+            0.1219,
+            0.1225,
+            0.1237
+          ]
+        },
+        "20": {
+          "mean": 0.1883,
+          "std": 0.000361,
+          "values": [
+            0.188,
+            0.1887,
+            0.1882
+          ]
+        }
+      },
+      "map": {
+        "5": {
+          "mean": 0.025233,
+          "std": 0.000379,
+          "values": [
+            0.0248,
+            0.0254,
+            0.0255
+          ]
+        },
+        "10": {
+          "mean": 0.0286,
+          "std": 0.000361,
+          "values": [
+            0.0282,
+            0.0287,
+            0.0289
+          ]
+        },
+        "20": {
+          "mean": 0.0317,
+          "std": 0.000346,
+          "values": [
+            0.0313,
+            0.0319,
+            0.0319
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+Dataset: amazon-cds
+Users: 107546
+Items: 71943
+Train interactions: 1132521
+Test interactions: 244487
+Total interactions: 1377008
+Sparsity: 0.999822

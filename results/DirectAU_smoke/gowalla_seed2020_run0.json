@@ -1,34 +1,324 @@
 {
   "config": {
-    "\u001b[0m\u001b[1;36mvalid_metric_bigger\u001b[0m": "\u001b[1;33mTrue\u001b[0m",
-    "\u001b[1;36membedding_size\u001b[0m": "\u001b[1;33m64\u001b[0m",
-    "\u001b[1;36mencoder\u001b[0m": "\u001b[1;33mMF\u001b[0m",
-    "\u001b[1;36mgamma\u001b[0m": "\u001b[1;33m5\u001b[0m",
-    "\u001b[1;36mSOURCE_ID_FIELD\u001b[0m": "\u001b[1;33msource_id\u001b[0m",
-    "\u001b[1;36mTARGET_ID_FIELD\u001b[0m": "\u001b[1;33mtarget_id\u001b[0m",
-    "\u001b[1;36mMODEL_TYPE\u001b[0m": "\u001b[1;33mModelType.GENERAL\u001b[0m",
-    "\u001b[1;36mMODEL_INPUT_TYPE\u001b[0m": "\u001b[1;33mInputType.POINTWISE\u001b[0m",
-    "\u001b[1;36meval_type\u001b[0m": "\u001b[1;33mEvaluatorType.RANKING\u001b[0m",
-    "\u001b[1;36mdevice\u001b[0m": "\u001b[1;33mcpu\u001b[0m",
-    "\u001b[1;36mtrain_neg_sample_args\u001b[0m": "\u001b[1;33m{'strategy': 'none'}\u001b[0m"
+    "gpu_id": 0,
+    "use_gpu": true,
+    "seed": 2020,
+    "state": "INFO",
+    "reproducibility": true,
+    "data_path": "D:/Big Data/Recommendation-System-Experiments/models/DirectAU/data/gowalla",
+    "show_progress": true,
+    "checkpoint_dir": "saved",
+    "epochs": 3,
+    "train_batch_size": 1024,
+    "learner": "adam",
+    "learning_rate": 0.001,
+    "training_neg_sample_num": 0,
+    "training_neg_sample_distribution": "uniform",
+    "eval_step": 1,
+    "stopping_step": 10,
+    "clip_grad_norm": null,
+    "weight_decay": "1e-06",
+    "draw_loss_pic": false,
+    "loss_decimal_place": 4,
+    "eval_setting": "RO_RS,full",
+    "group_by_user": true,
+    "split_ratio": [
+      0.8,
+      0.1,
+      0.1
+    ],
+    "leave_one_num": 2,
+    "real_time_process": false,
+    "metrics": [
+      "Precision",
+      "Recall",
+      "NDCG",
+      "Hit",
+      "MRR",
+      "MAP"
+    ],
+    "topk": [
+      5,
+      10,
+      20
+    ],
+    "valid_metric": "NDCG@20",
+    "eval_batch_size": 4096,
+    "metric_decimal_place": 4,
+    "USER_ID_FIELD": "user_id",
+    "ITEM_ID_FIELD": "item_id",
+    "RATING_FIELD": "rating",
+    "TIME_FIELD": "timestamp",
+    "seq_len": null,
+    "LABEL_FIELD": "label",
+    "threshold": null,
+    "NEG_PREFIX": "neg_",
+    "load_col": {
+      "inter": [
+        "user_id",
+        "item_id",
+        "timestamp"
+      ]
+    },
+    "unload_col": null,
+    "unused_col": null,
+    "additional_feat_suffix": null,
+    "rm_dup_inter": null,
+    "lowest_val": null,
+    "highest_val": null,
+    "equal_val": null,
+    "not_equal_val": null,
+    "filter_inter_by_user_or_item": true,
+    "max_user_inter_num": null,
+    "min_user_inter_num": 5,
+    "max_item_inter_num": null,
+    "min_item_inter_num": 5,
+    "fields_in_same_space": null,
+    "preload_weight": null,
+    "normalize_field": null,
+    "normalize_all": null,
+    "ITEM_LIST_LENGTH_FIELD": "item_length",
+    "LIST_SUFFIX": "_list",
+    "MAX_ITEM_LIST_LENGTH": 50,
+    "POSITION_FIELD": "position_id",
+    "HEAD_ENTITY_ID_FIELD": "head_id",
+    "TAIL_ENTITY_ID_FIELD": "tail_id",
+    "RELATION_ID_FIELD": "relation_id",
+    "ENTITY_ID_FIELD": "entity_id",
+    "benchmark_filename": [
+      "train",
+      "valid",
+      "test"
+    ],
+    "valid_metric_bigger": true,
+    "embedding_size": 64,
+    "encoder": "MF",
+    "gamma": 5,
+    "SOURCE_ID_FIELD": "source_id",
+    "TARGET_ID_FIELD": "target_id",
+    "MODEL_TYPE": "ModelType.GENERAL",
+    "MODEL_INPUT_TYPE": "InputType.POINTWISE",
+    "eval_type": "EvaluatorType.RANKING",
+    "device": "cpu",
+    "train_neg_sample_args": {
+      "strategy": "none"
+    }
   },
   "dataset": "gowalla",
   "model": "DirectAU",
-  "seed": 2022,
+  "seed": 2020,
   "topks": [
     5,
     10,
     20
   ],
-  "dataset_stats": {},
-  "epoch_logs": [],
-  "test_results": [],
-  "best_results": {
-    "epoch": -1,
-    "metrics": {},
-    "best_epoch": -1
+  "dataset_stats": {
+    "n_users": 29859,
+    "n_items": 40989,
+    "train_interactions": 1027464
   },
-  "total_train_time_seconds": 409.32,
+  "epoch_logs": [
+    {
+      "epoch": 0,
+      "loss": -17.4793,
+      "epoch_time_seconds": 62.58,
+      "gpu_memory_peak_MB": null
+    },
+    {
+      "epoch": 1,
+      "loss": -17.8987,
+      "epoch_time_seconds": 91.46,
+      "gpu_memory_peak_MB": null
+    },
+    {
+      "epoch": 2,
+      "loss": -18.0136,
+      "epoch_time_seconds": 60.21,
+      "gpu_memory_peak_MB": null
+    }
+  ],
+  "test_results": [
+    {
+      "epoch": 0,
+      "test_time_seconds": 57.0,
+      "metrics": {
+        "precision": {
+          "5": 0.0092,
+          "10": 0.0074,
+          "20": 0.0059
+        },
+        "recall": {
+          "5": 0.0181,
+          "10": 0.0281,
+          "20": 0.044
+        },
+        "ndcg": {
+          "5": 0.0155,
+          "10": 0.0189,
+          "20": 0.0237
+        },
+        "mrr": {
+          "5": 0.0227,
+          "10": 0.0258,
+          "20": 0.0281
+        },
+        "hit_rate": {
+          "5": 0.0434,
+          "10": 0.0666,
+          "20": 0.0997
+        },
+        "map": {
+          "5": 0.0102,
+          "10": 0.011,
+          "20": 0.0121
+        }
+      }
+    },
+    {
+      "epoch": 1,
+      "test_time_seconds": 58.19,
+      "metrics": {
+        "precision": {
+          "5": 0.0132,
+          "10": 0.0107,
+          "20": 0.0085
+        },
+        "recall": {
+          "5": 0.0303,
+          "10": 0.0472,
+          "20": 0.0743
+        },
+        "ndcg": {
+          "5": 0.0245,
+          "10": 0.0302,
+          "20": 0.0382
+        },
+        "mrr": {
+          "5": 0.0328,
+          "10": 0.0374,
+          "20": 0.0407
+        },
+        "hit_rate": {
+          "5": 0.0621,
+          "10": 0.0966,
+          "20": 0.1456
+        },
+        "map": {
+          "5": 0.0169,
+          "10": 0.0185,
+          "20": 0.0204
+        }
+      }
+    },
+    {
+      "epoch": 2,
+      "test_time_seconds": 28.93,
+      "metrics": {
+        "precision": {
+          "5": 0.0151,
+          "10": 0.0124,
+          "20": 0.0098
+        },
+        "recall": {
+          "5": 0.0355,
+          "10": 0.0577,
+          "20": 0.0884
+        },
+        "ndcg": {
+          "5": 0.0291,
+          "10": 0.0366,
+          "20": 0.0457
+        },
+        "mrr": {
+          "5": 0.0384,
+          "10": 0.0438,
+          "20": 0.0475
+        },
+        "hit_rate": {
+          "5": 0.0704,
+          "10": 0.111,
+          "20": 0.1655
+        },
+        "map": {
+          "5": 0.0207,
+          "10": 0.023,
+          "20": 0.0251
+        }
+      }
+    },
+    {
+      "epoch": 0,
+      "metrics": {
+        "precision": {
+          "5": 0.0416,
+          "10": 0.0333,
+          "20": 0.026
+        },
+        "recall": {
+          "5": 0.037,
+          "10": 0.0584,
+          "20": 0.0896
+        },
+        "ndcg": {
+          "5": 0.0519,
+          "10": 0.0563,
+          "20": 0.0661
+        },
+        "mrr": {
+          "5": 0.0984,
+          "10": 0.1085,
+          "20": 0.1149
+        },
+        "hit_rate": {
+          "5": 0.1699,
+          "10": 0.2456,
+          "20": 0.3385
+        },
+        "map": {
+          "5": 0.0309,
+          "10": 0.0284,
+          "20": 0.0293
+        }
+      }
+    }
+  ],
+  "best_results": {
+    "epoch": 2,
+    "metrics": {
+      "precision": {
+        "5": 0.0151,
+        "10": 0.0124,
+        "20": 0.0098
+      },
+      "recall": {
+        "5": 0.0355,
+        "10": 0.0577,
+        "20": 0.0884
+      },
+      "ndcg": {
+        "5": 0.0291,
+        "10": 0.0366,
+        "20": 0.0457
+      },
+      "mrr": {
+        "5": 0.0384,
+        "10": 0.0438,
+        "20": 0.0475
+      },
+      "hit_rate": {
+        "5": 0.0704,
+        "10": 0.111,
+        "20": 0.1655
+      },
+      "map": {
+        "5": 0.0207,
+        "10": 0.023,
+        "20": 0.0251
+      }
+    },
+    "best_epoch": 2
+  },
+  "total_train_time_seconds": 214.25,
   "system_info": {
     "device": "cpu",
     "gpu_name": null,

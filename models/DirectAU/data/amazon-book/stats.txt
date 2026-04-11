@@ -1,0 +1,7 @@
+Dataset: amazon-book-1m
+Users: 64956
+Items: 57802
+Train interactions: 1393584
+Test interactions: 320425
+Total interactions: 1714009
+Sparsity: 0.999543
