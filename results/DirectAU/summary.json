@@ -331,6 +331,303 @@
       }
     }
   },
+  "LoL1M": {
+    "num_runs": 3,
+    "dataset_stats": {
+      "n_users": 55154,
+      "n_items": 3863,
+      "train_interactions": 1195200
+    },
+    "system_info": {
+      "device": "cuda",
+      "gpu_name": "Tesla T4",
+      "gpu_memory_total_MB": 14912.69
+    },
+    "config": {
+      "gpu_id": 0,
+      "use_gpu": true,
+      "seed": 2020,
+      "state": "INFO",
+      "reproducibility": true,
+      "data_path": "/kaggle/working/DirectAU-training/models/DirectAU/data/LoL1M",
+      "show_progress": true,
+      "checkpoint_dir": "saved",
+      "epochs": 300,
+      "train_batch_size": 256,
+      "learner": "adam",
+      "learning_rate": 0.001,
+      "training_neg_sample_num": 0,
+      "training_neg_sample_distribution": "uniform",
+      "eval_step": 1,
+      "stopping_step": 10,
+      "clip_grad_norm": null,
+      "weight_decay": "1e-06",
+      "draw_loss_pic": false,
+      "loss_decimal_place": 4,
+      "eval_setting": "RO_RS,full",
+      "group_by_user": true,
+      "split_ratio": [
+        0.8,
+        0.1,
+        0.1
+      ],
+      "leave_one_num": 2,
+      "real_time_process": false,
+      "metrics": [
+        "Precision",
+        "Recall",
+        "NDCG",
+        "Hit",
+        "MRR",
+        "MAP"
+      ],
+      "topk": [
+        5,
+        10,
+        20
+      ],
+      "valid_metric": "NDCG@20",
+      "eval_batch_size": 4096,
+      "metric_decimal_place": 4,
+      "USER_ID_FIELD": "user_id",
+      "ITEM_ID_FIELD": "item_id",
+      "RATING_FIELD": "rating",
+      "TIME_FIELD": "timestamp",
+      "seq_len": null,
+      "LABEL_FIELD": "label",
+      "threshold": null,
+      "NEG_PREFIX": "neg_",
+      "load_col": {
+        "inter": [
+          "user_id",
+          "item_id",
+          "timestamp"
+        ]
+      },
+      "unload_col": null,
+      "unused_col": null,
+      "additional_feat_suffix": null,
+      "lowest_val": null,
+      "highest_val": null,
+      "equal_val": null,
+      "not_equal_val": null,
+      "max_user_inter_num": null,
+      "min_user_inter_num": 5,
+      "max_item_inter_num": null,
+      "min_item_inter_num": 5,
+      "fields_in_same_space": null,
+      "preload_weight": null,
+      "normalize_field": null,
+      "normalize_all": null,
+      "ITEM_LIST_LENGTH_FIELD": "item_length",
+      "LIST_SUFFIX": "_list",
+      "MAX_ITEM_LIST_LENGTH": 50,
+      "POSITION_FIELD": "position_id",
+      "HEAD_ENTITY_ID_FIELD": "head_id",
+      "TAIL_ENTITY_ID_FIELD": "tail_id",
+      "RELATION_ID_FIELD": "relation_id",
+      "ENTITY_ID_FIELD": "entity_id",
+      "valid_metric_bigger": true,
+      "embedding_size": 64,
+      "encoder": "MF",
+      "gamma": 1,
+      "rm_dup_inter": null,
+      "filter_inter_by_user_or_item": true,
+      "SOURCE_ID_FIELD": "source_id",
+      "TARGET_ID_FIELD": "target_id",
+      "benchmark_filename": [
+        "train",
+        "valid",
+        "test"
+      ],
+      "MODEL_TYPE": "ModelType.GENERAL",
+      "MODEL_INPUT_TYPE": "InputType.POINTWISE",
+      "eval_type": "EvaluatorType.RANKING",
+      "device": "cuda",
+      "train_neg_sample_args": {
+        "strategy": "none"
+      }
+    },
+    "training_time_mean_seconds": 3078.05,
+    "training_time_std_seconds": 284.46,
+    "best_epoch_mean": 150,
+    "metrics": {
+      "precision": {
+        "5": {
+          "mean": 0.0596,
+          "std": 0.0002,
+          "values": [
+            0.0594,
+            0.0596,
+            0.0598
+          ]
+        },
+        "10": {
+          "mean": 0.0422,
+          "std": 0.0001,
+          "values": [
+            0.0422,
+            0.0421,
+            0.0423
+          ]
+        },
+        "20": {
+          "mean": 0.028433,
+          "std": 5.8e-05,
+          "values": [
+            0.0284,
+            0.0284,
+            0.0285
+          ]
+        }
+      },
+      "recall": {
+        "5": {
+          "mean": 0.2324,
+          "std": 0.0008,
+          "values": [
+            0.2316,
+            0.2324,
+            0.2332
+          ]
+        },
+        "10": {
+          "mean": 0.326067,
+          "std": 0.000902,
+          "values": [
+            0.326,
+            0.3252,
+            0.327
+          ]
+        },
+        "20": {
+          "mean": 0.434833,
+          "std": 0.001168,
+          "values": [
+            0.4338,
+            0.4346,
+            0.4361
+          ]
+        }
+      },
+      "ndcg": {
+        "5": {
+          "mean": 0.170467,
+          "std": 0.000493,
+          "values": [
+            0.1699,
+            0.1708,
+            0.1707
+          ]
+        },
+        "10": {
+          "mean": 0.202867,
+          "std": 0.000351,
+          "values": [
+            0.2025,
+            0.2029,
+            0.2032
+          ]
+        },
+        "20": {
+          "mean": 0.2325,
+          "std": 0.000529,
+          "values": [
+            0.2319,
+            0.2327,
+            0.2329
+          ]
+        }
+      },
+      "mrr": {
+        "5": {
+          "mean": 0.170467,
+          "std": 0.000513,
+          "values": [
+            0.1699,
+            0.1709,
+            0.1706
+          ]
+        },
+        "10": {
+          "mean": 0.185,
+          "std": 0.000436,
+          "values": [
+            0.1845,
+            0.1853,
+            0.1852
+          ]
+        },
+        "20": {
+          "mean": 0.193467,
+          "std": 0.000493,
+          "values": [
+            0.1929,
+            0.1938,
+            0.1937
+          ]
+        }
+      },
+      "hit_rate": {
+        "5": {
+          "mean": 0.287033,
+          "std": 0.000902,
+          "values": [
+            0.2861,
+            0.2871,
+            0.2879
+          ]
+        },
+        "10": {
+          "mean": 0.396733,
+          "std": 0.000874,
+          "values": [
+            0.3965,
+            0.396,
+            0.3977
+          ]
+        },
+        "20": {
+          "mean": 0.519067,
+          "std": 0.001484,
+          "values": [
+            0.5178,
+            0.5187,
+            0.5207
+          ]
+        }
+      },
+      "map": {
+        "5": {
+          "mean": 0.138633,
+          "std": 0.000404,
+          "values": [
+            0.1382,
+            0.139,
+            0.1387
+          ]
+        },
+        "10": {
+          "mean": 0.151933,
+          "std": 0.000306,
+          "values": [
+            0.1516,
+            0.1522,
+            0.152
+          ]
+        },
+        "20": {
+          "mean": 0.1603,
+          "std": 0.000361,
+          "values": [
+            0.1599,
+            0.1606,
+            0.1604
+          ]
+        }
+      }
+    }
+  },
   "yelp18": {
     "num_runs": 3,
     "dataset_stats": {

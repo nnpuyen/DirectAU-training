@@ -37,7 +37,7 @@ from statistics import mean, stdev
 # ============================================================
 # Fixed seeds for reproducibility
 # ============================================================
-SEEDS = [2020, 2021, 2022]
+SEEDS = [2021, 2022, 2023]
 
 ANSI_ESCAPE_PATTERN = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]')
 
